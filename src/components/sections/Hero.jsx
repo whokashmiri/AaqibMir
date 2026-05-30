@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const roles = [
   "FULL STACK",
-  "AI AUTOMATION",
+  "AI ENGINEER",
   "SALESFORCE",
 ];
 
@@ -112,7 +112,7 @@ export default function Hero() {
           <div className="text-[18px] font-medium uppercase leading-[1.1]">
 
             {/* ROLE */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sticky">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={roleIndex}
