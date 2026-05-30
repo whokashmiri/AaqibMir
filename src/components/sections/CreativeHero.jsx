@@ -55,12 +55,7 @@ const filter = useMotionTemplate`blur(${blur}px)`;
   className="absolute inset-0"
 >
           <div className="relative w-full h-full">
-            {/* Top Left */}
-            <div className="absolute left-14 top-12 text-xl font-medium uppercase">
-              WEB CREATIVE DEVELOPER
-              <br />
-              AVAILABLE FULL-TIME
-            </div>
+         
 
             {/* Logo */}
             <div className="absolute top-10 left-1/2 -translate-x-1/2">
@@ -69,13 +64,6 @@ const filter = useMotionTemplate`blur(${blur}px)`;
                 alt=""
                 className="h-12 object-contain"
               />
-            </div>
-
-            {/* Menu */}
-            <div className="absolute top-10 right-14 text-5xl font-black leading-none">
-              ME
-              <br />
-              NU
             </div>
 
             {/* Center Text */}
@@ -89,15 +77,6 @@ const filter = useMotionTemplate`blur(${blur}px)`;
               </h1>
             </div>
 
-            {/* Bottom Left */}
-            <div className="absolute left-14 bottom-10 text-xl uppercase">
-              PORTFOLIO 2026
-            </div>
-
-            {/* Bottom Right */}
-            <div className="absolute right-14 bottom-10 text-xl uppercase">
-              BASED IN CHAMBÉRY
-            </div>
           </div>
         </motion.div>
 
@@ -107,12 +86,7 @@ const filter = useMotionTemplate`blur(${blur}px)`;
           className="absolute inset-0 bg-[#e8dddd]"
         >
           <div className="relative w-full h-full">
-            {/* Top Left */}
-            <div className="absolute left-14 top-12 text-xl font-medium uppercase">
-              WEB CREATIVE DEVELOPER
-              <br />
-              AVAILABLE FREELANCE
-            </div>
+         
 
             {/* Logo */}
             <div className="absolute top-10 left-1/2 -translate-x-1/2">
@@ -123,12 +97,7 @@ const filter = useMotionTemplate`blur(${blur}px)`;
               />
             </div>
 
-            {/* Menu */}
-            <div className="absolute top-10 right-14 text-5xl font-black leading-none">
-              ME
-              <br />
-              NU
-            </div>
+         
 
             {/* Main Text */}
             <div className="h-full flex flex-col items-center justify-center">
