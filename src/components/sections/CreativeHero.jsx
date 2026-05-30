@@ -6,6 +6,7 @@ import {
   useTransform,
   useMotionTemplate,
 } from "framer-motion";
+import { useThemeColor } from "../../context/ThemeContext";
 
 import { useRef } from "react";
 
@@ -14,6 +15,9 @@ import { useRef } from "react";
 
 
 export default function CreativeHero() {
+
+const { themeColor } = useThemeColor();
+
   const containerRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -106,11 +110,13 @@ const filter = useMotionTemplate`blur(${blur}px)`;
                 <br />
                 ABOUT
                 <br />
-                <span className="text-[#14c25d]">
+                 <motion.h3   animate={{
+              color: themeColor,
+            }}>
                   CREATIVE
                   <br />
                   CHALLENGES
-                </span>
+              </motion.h3>
               </h2>
             </div>
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useThemeColor } from "../../context/ThemeContext";
 
 const roles = [
   "FULL STACK",
@@ -12,16 +13,10 @@ const availability = [
   "FULL TIME",
 ];
 
-const randomColors = [
-  "#00c86f",
-  "#7c3aed",
-  "#ff6b6b",
-  "#00bcd4",
-  "#f59e0b",
-  "#ec4899",
-];
 
 export default function Hero() {
+
+  const { themeColor } = useThemeColor();
   const cursorRef = useRef(null);
 
   const [hovered, setHovered] = useState(false);
@@ -31,15 +26,6 @@ export default function Hero() {
   const [availabilityIndex, setAvailabilityIndex] =
     useState(0);
 
-  // RANDOM COLOR PER REFRESH
-  const randomTheme =
-    randomColors[
-      Math.floor(Math.random() * randomColors.length)
-    ];
-
-  const [themeColor] = useState(randomTheme);
-
-  // CURSOR VIDEO
   useEffect(() => {
     const moveCursor = (e) => {
       if (!cursorRef.current) return;
@@ -109,10 +95,10 @@ export default function Hero() {
 
         {/* TOP LEFT */}
         <div className="absolute left-14 top-14 z-20">
-          <div className="text-[18px] font-medium uppercase leading-[1.1]">
+          <div className="text-[18px] font-medium uppercase leading-[1.1] fixed">
 
             {/* ROLE */}
-            <div className="flex items-center gap-2 sticky">
+            <div className="flex items-center gap-2 ">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={roleIndex}
@@ -176,13 +162,13 @@ export default function Hero() {
         {/* MENU */}
         <button
           onClick={() => setMenuOpen(true)}
-          className="absolute right-14 top-14 z-30 text-[22px] font-black uppercase transition-all hover:scale-110"
+          className="fixed right-14 top-14 z-30 text-[22px] font-black uppercase transition-all hover:scale-110 "
         >
           MENU
         </button>
 
         {/* LOGO */}
-        <div className="absolute left-1/2 top-12 z-20 -translate-x-1/2 text-center">
+        <div className="fixed left-1/2 top-12 z-20 -translate-x-1/2 text-center ">
           <motion.h3
             animate={{
               color: themeColor,
@@ -267,11 +253,11 @@ export default function Hero() {
         </div>
 
         {/* BOTTOM */}
-        <div className="absolute bottom-12 left-14 z-20 text-[18px] uppercase">
+        <div className="fixed bottom-12 left-14 z-20 text-[18px] uppercase">
           PORTFOLIO {new Date().getFullYear()}
         </div>
 
-        <div className="absolute bottom-12 right-14 z-20 text-[18px] uppercase">
+        <div className="fixed bottom-12 right-14 z-20 text-[18px] uppercase">
           BASED IN RIYADH
         </div>
 
