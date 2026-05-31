@@ -1,9 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { useThemeColor } from "../../context/ThemeContext";
-
+ import { useState } from "react";
 export default function Contact() {
   const { themeColor } = useThemeColor();
+  
+ 
+
+const [emailHovered, setEmailHovered] = useState(false);
+  
+
 
   return (
     <section className="relative min-h-screen bg-[#ebe4e1] overflow-hidden">
@@ -19,20 +25,34 @@ export default function Contact() {
           LET'S WORK TOGETHER.
         </p>
 
-        <motion.a
-          href="mailto:aaqib@example.com"
-          whileHover={{ scale: 1.03 }}
-          className="group flex items-center gap-6"
-        >
-          <h1 className="text-center text-[7vw] font-black uppercase leading-none tracking-[-6px]">
-            CONTACT@AAQIBMIR.COM
-          </h1>
+       <motion.a
+  href="mailto:aaqib@example.com"
+  whileHover={{ scale: 1.03 }}
+  onHoverStart={() => setEmailHovered(true)}
+  onHoverEnd={() => setEmailHovered(false)}
+  className="group flex items-center gap-6"
+>
+  <motion.h1
+    animate={{
+      color: emailHovered ? themeColor : "#000",
+    }}
+    transition={{ duration: 0.9 }}
+    className="text-center text-[7vw] font-black uppercase leading-none tracking-[-6px]"
+  >
+    CONTACT@AAQIBMIR.COM
+  </motion.h1>
 
-          <ArrowUpRight
-            size={70}
-            className="opacity-50 transition-all group-hover:translate-x-2 group-hover:-translate-y-2"
-          />
-        </motion.a>
+  <motion.div
+    animate={{
+      color: emailHovered ? themeColor : "#9ca3af",
+      x: emailHovered ? 8 : 0,
+      y: emailHovered ? -8 : 0,
+    }}
+    transition={{ duration: 0.9 }}
+  >
+    <ArrowUpRight size={70} />
+  </motion.div>
+</motion.a>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-gray-500 uppercase text-[18px]">
           <span>RIYADH, SAUDI ARABIA</span>
@@ -40,11 +60,24 @@ export default function Contact() {
           <span>AVAILABLE</span>
         </div>
 
-        <div className="mt-4 flex gap-10 uppercase text-[18px]">
-          <a href="#">GITHUB</a>
-          <a href="#">INSTAGRAM</a>
-          <a href="#">LINKEDIN</a>
-        </div>
+      <div className="mt-4 flex gap-10 uppercase text-[18px]">
+  {["GITHUB", "INSTAGRAM", "LINKEDIN"].map((item) => (
+    <motion.a
+      key={item}
+      href="#"
+      whileHover={{
+        color: themeColor,
+        y: -2,
+      }}
+      transition={{
+        duration: 0.2,
+      }}
+      className="cursor-pointer"
+    >
+      {item}
+    </motion.a>
+  ))}
+</div>
       </div>
 
     </section>
