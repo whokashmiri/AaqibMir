@@ -8,36 +8,9 @@ export default function Contact() {
   return (
     <section className="relative min-h-screen bg-[#ebe4e1] overflow-hidden">
 
-      {/* TOP LEFT */}
-      <div className="fixed left-14 top-14 z-20">
-        <p className="text-[18px] uppercase leading-[1.1]">
-          CREATIVE DEVELOPER
-          <br />
-          AVAILABLE FREELANCE
-        </p>
-      </div>
+      
 
-      {/* LOGO */}
-      <div className="fixed left-1/2 top-12 -translate-x-1/2 z-20 text-center">
-        <h3
-          style={{ color: themeColor }}
-          className="text-[22px] font-black uppercase"
-        >
-          AAQIB
-        </h3>
 
-        <p
-          style={{ color: themeColor }}
-          className="-mt-2 text-[22px] font-black uppercase"
-        >
-          BASHIR
-        </p>
-      </div>
-
-      {/* MENU */}
-      <button className="fixed right-14 top-14 z-20 text-[22px] font-black uppercase">
-        MENU
-      </button>
 
       {/* CENTER CONTENT */}
       <div className="flex min-h-screen flex-col items-center justify-center px-10">
@@ -74,14 +47,6 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* FOOTER */}
-      <div className="fixed left-14 bottom-12 uppercase text-[18px]">
-        AAQIB BASHIR — {new Date().getFullYear()}
-      </div>
-
-      <div className="fixed right-14 bottom-12 uppercase text-[18px]">
-        BASED IN RIYADH
-      </div>
     </section>
   );
 }
