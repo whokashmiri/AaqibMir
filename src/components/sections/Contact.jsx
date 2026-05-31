@@ -27,7 +27,6 @@ const [emailHovered, setEmailHovered] = useState(false);
 
        <motion.a
   href="mailto:aaqib@example.com"
-  whileHover={{ scale: 1.03 }}
   onHoverStart={() => setEmailHovered(true)}
   onHoverEnd={() => setEmailHovered(false)}
   className="group flex items-center gap-6"
@@ -36,7 +35,7 @@ const [emailHovered, setEmailHovered] = useState(false);
     animate={{
       color: emailHovered ? themeColor : "#000",
     }}
-    transition={{ duration: 0.9 }}
+    transition={{ duration: 0.6 }}
     className="text-center text-[7vw] font-black uppercase leading-none tracking-[-6px]"
   >
     CONTACT@AAQIBMIR.COM
@@ -48,7 +47,7 @@ const [emailHovered, setEmailHovered] = useState(false);
       x: emailHovered ? 8 : 0,
       y: emailHovered ? -8 : 0,
     }}
-    transition={{ duration: 0.9 }}
+    transition={{ duration: 0.6 }}
   >
     <ArrowUpRight size={70} />
   </motion.div>
@@ -67,7 +66,7 @@ const [emailHovered, setEmailHovered] = useState(false);
       href="#"
       whileHover={{
         color: themeColor,
-        y: -2,
+       
       }}
       transition={{
         duration: 0.2,
