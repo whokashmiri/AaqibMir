@@ -5,7 +5,7 @@ const ThemeContext = createContext();
 const colors = [
   "#00c86f",
   "#7c3aed",
-  "#ff6b6b",
+  "#5F00BA",
   "#FE5D26",
   "#f59e0b",
   "#ec4899",
