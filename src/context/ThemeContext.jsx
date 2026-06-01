@@ -9,6 +9,7 @@ const colors = [
   "#FE5D26",
   "#f59e0b",
   "#ec4899",
+  "#899D78"
 ];
 
 export function ThemeProvider({ children }) {
