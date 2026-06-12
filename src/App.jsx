@@ -4,6 +4,7 @@ import Home from "./components/sections/Hero";
 import Hero from "./components/sections/Hero";
 import CreativeHero from "./components/sections/CreativeHero";
 import Contact from "./components/sections/Contact";
+import AboutSection from "./components/sections/AboutSection";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -16,6 +17,7 @@ export default function App() {
         <Hero />
         <CreativeHero />
         <Contact/>
+        <AboutSection/>
       {/* )} */}
     </>
   );
