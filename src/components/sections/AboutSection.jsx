@@ -39,9 +39,9 @@ const [activeIndex, setActiveIndex] = useState(0);
   ];
 
   const info = [
-    ["Since", "2017"],
-    ["Location", "Chambéry, France"],
-    ["Education", "Master ECNI — Gobelins"],
+    ["Since", "2021"],
+    ["Location", "Riyadh, Saudi Arabia"],
+    ["Education", "Engineering — Computer Science"],
     ["Status", "Available"],
     ["CSSDA", "UI · UX · Innovation"],
     ["BestCSS", "Site of the Day"],
