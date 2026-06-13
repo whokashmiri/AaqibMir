@@ -1,5 +1,9 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { useThemeColor } from "../../context/ThemeContext";
 export default function ContactSection() {
+     const { themeColor } = useThemeColor();
+     const [emailHovered, setEmailHovered] = useState(false);
   return (
     <section className="relative h-screen bg-[#f4f4f4] overflow-hidden">
       {/* GRID */}
@@ -19,9 +23,15 @@ export default function ContactSection() {
 
       {/* CENTER CONTENT */}
       <div className="absolute left-[11%] top-[30%]">
-        <h1 className="text-[clamp(5rem,9vw,10rem)] font-black leading-none tracking-tight">
-          GET IN TOUCH
-        </h1>
+          <motion.h1
+    animate={{
+      color: emailHovered ? themeColor : "#000",
+    }}
+    transition={{ duration: 0.6 }}
+    className="text-center text-[7vw] font-black uppercase leading-none tracking-[-6px]"
+  >
+    GET IN TOUCH
+  </motion.h1>
       </div>
 
       {/* CONTACT INFO */}

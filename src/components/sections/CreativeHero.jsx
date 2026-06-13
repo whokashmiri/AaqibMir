@@ -105,19 +105,21 @@ const filter = useMotionTemplate`blur(${blur}px)`;
 
             {/* Main Text */}
             <div className="h-full flex flex-col items-center justify-center">
-              <h2 className="text-[10vw] leading-[0.85] font-black uppercase text-center">
+              <motion.h1 className="text-[10vw] leading-[0.85] font-black uppercase text-center">
                 PASSIONATE
                 <br />
                 ABOUT
                 <br />
-                 <motion.h3   animate={{
+                  </motion.h1>
+                 <motion.h2  className="text-[10vw] leading-[0.85] font-black uppercase text-center"
+                   animate={{
               color: themeColor,
             }}>
                   CREATIVE
                   <br />
                   CHALLENGES
-              </motion.h3>
-              </h2>
+              </motion.h2>
+            
             </div>
 
             {/* Circle Button */}
