@@ -4,9 +4,6 @@ import { useThemeColor } from "../../context/ThemeContext";
  import { useState } from "react";
 export default function Contact() {
   const { themeColor } = useThemeColor();
-  
- 
-
 const [emailHovered, setEmailHovered] = useState(false);
   
 

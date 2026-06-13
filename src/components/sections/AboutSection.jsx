@@ -68,14 +68,16 @@ useGSAP(() => {
   });
 
   const tl = gsap.timeline({
+  
+
     scrollTrigger: {
-      trigger: sectionRef.current,
-      start: "top top",
-      end: "+=4000",
-      scrub: true,
-      pin: pinRef.current,
-      anticipatePin: 1,
-    },
+  trigger: sectionRef.current,
+  start: "top top",
+  end: "+=2000",
+  scrub: true,
+  pin: pinRef.current,
+  pinSpacing: true, // IMPORTANT (make sure it's true)
+}
   });
 
   // INTRO → BACKGROUND
@@ -187,10 +189,10 @@ const NavItem = ({ label, fillClass }) => (
       ref={sectionRef}
       className="relative h-[400vh]"
     >
-      <div
-        ref={pinRef}
-        className="sticky top-0 h-screen bg-[#030303] overflow-hidden"
-      >
+     <div
+  ref={pinRef}
+  className="sticky top-0 h-screen bg-[#030303] overflow-hidden z-10 isolate"
+>
         {/* Grid */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute left-[16.66%] top-0 h-full w-px bg-gray-500" />
