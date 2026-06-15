@@ -76,11 +76,11 @@ export default function SeeMyWorkSection() {
 
             <text
               fill={themeColor}
-              fontSize="16"
+              fontSize="20"
               fontWeight="700"
             >
               <textPath href="#circlePath">
-                • SEE MORE • SEE MORE • SEE MORE •
+                • SEE MORE • SEE MORE • SEE MORE • SEE MORE •
               </textPath>
             </text>
           </svg>
