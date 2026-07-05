@@ -8,6 +8,7 @@ import AboutSection from "./components/sections/AboutSection";
 import SeeMyWorkSection from "./components/sections/SeeMyWorkSection";
 import ContactSection from "./components/sections/ContactSection";
 import ProjectsHero from "./components/sections/ProjectsHero";
+import Projects from "./components/sections/Projects";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,7 @@ export default function App() {
         <ContactSection/>
         <SeeMyWorkSection/>
         <ProjectsHero/>
+        <Projects/>
         
         
       {/* )} */}
