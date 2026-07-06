@@ -1,5 +1,4 @@
 import { useState } from "react";
-import {  Routes , Route } from 'react-router-dom'
 import JourneyLoader from "./components/loader/JourneyLoader";
 import Home from "./components/sections/Hero";
 import Hero from "./components/sections/Hero";
@@ -11,7 +10,7 @@ import ContactSection from "./components/sections/ContactSection";
 import ProjectsHero from "./components/sections/ProjectsHero";
 import Projects from "./components/sections/Projects";
 
-export default function App() {
+export default function Home() {
   const [loading, setLoading] = useState(true);
 
   return (
@@ -19,27 +18,18 @@ export default function App() {
       {/* {loading ? (
         <JourneyLoader onFinish={() => setLoading(false)} />
       ) : ( */}
-        {/* <Hero />
+        <Hero />
         <CreativeHero />
+         <SeeMyWorkSection/>
         <Contact/>
-        <AboutSection/>
-        <ContactSection/>
-        <SeeMyWorkSection/>
-        <ProjectsHero/>
-        <Projects/>
-         */}
+        {/* <AboutSection/> */}
+        {/* <ContactSection/> */}
+       
+        {/* <ProjectsHero/> */}
+        {/* <Projects/> */}
+        
         
       {/* )} */}
-
-      <Routes>
-      <Route path='/' element={<Home/>}/>
-      <Route path='*' element={<Home/>}/>
-      {/* <Route path='/login'  element={<Login/>}/>
-      <Route path='/track'  element={<Private Component={Track}/>}/>
-      <Route path='/diet'  element={<Private Component={Diet}/>}/>
-      <Route path='/register' element={<Register/>}/> */}
-    
-    </Routes>
     </>
   );
 }
