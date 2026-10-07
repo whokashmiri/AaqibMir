@@ -24,11 +24,11 @@ function LandingPage() {
 }
 
 export default function App() {
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // if (loading) {
-  //   return <JourneyLoader onFinish={() => setLoading(false)} />;
-  // }
+  if (loading) {
+    return <JourneyLoader onFinish={() => setLoading(false)} />;
+  }
 
   return (
     <Routes>
