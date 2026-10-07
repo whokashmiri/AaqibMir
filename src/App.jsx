@@ -1,45 +1,39 @@
 import { useState } from "react";
-import {  Routes , Route } from 'react-router-dom'
+import { Routes, Route } from "react-router-dom";
 import JourneyLoader from "./components/loader/JourneyLoader";
-import Home from "./components/sections/Hero";
 import Hero from "./components/sections/Hero";
 import CreativeHero from "./components/sections/CreativeHero";
-import Contact from "./components/sections/Contact";
 import AboutSection from "./components/sections/AboutSection";
-import SeeMyWorkSection from "./components/sections/SeeMyWorkSection";
 import ContactSection from "./components/sections/ContactSection";
+import SeeMyWorkSection from "./components/sections/SeeMyWorkSection";
 import ProjectsHero from "./components/sections/ProjectsHero";
 import Projects from "./components/sections/Projects";
+
+function LandingPage() {
+  return (
+    <>
+      <Hero />
+      <CreativeHero />
+      <AboutSection />
+      <ContactSection />
+      <SeeMyWorkSection />
+      <ProjectsHero />
+      <Projects />
+    </>
+  );
+}
 
 export default function App() {
   const [loading, setLoading] = useState(true);
 
-  return (
-    <>
-      {/* {loading ? (
-        <JourneyLoader onFinish={() => setLoading(false)} />
-      ) : ( */}
-        {/* <Hero />
-        <CreativeHero />
-        <Contact/>
-        <AboutSection/>
-        <ContactSection/>
-        <SeeMyWorkSection/>
-        <ProjectsHero/>
-        <Projects/>
-         */}
-        
-      {/* )} */}
+  if (loading) {
+    return <JourneyLoader onFinish={() => setLoading(false)} />;
+  }
 
-      <Routes>
-      <Route path='/' element={<Home/>}/>
-      <Route path='*' element={<Home/>}/>
-      {/* <Route path='/login'  element={<Login/>}/>
-      <Route path='/track'  element={<Private Component={Track}/>}/>
-      <Route path='/diet'  element={<Private Component={Diet}/>}/>
-      <Route path='/register' element={<Register/>}/> */}
-    
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="*" element={<LandingPage />} />
     </Routes>
-    </>
   );
 }

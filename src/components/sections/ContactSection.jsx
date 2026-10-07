@@ -97,8 +97,8 @@ export default function ContactSection() {
       <div className="absolute left-[11%] top-[62%] flex gap-32">
         <Item
           label="Email"
-          value="contact@example.com"
-          href="mailto:contact@example.com"
+          value="aaqibmir.ab@gmail.com"
+          href="mailto:aaqibmir.ab@gmail.com"
           keyName="email"
         />
 
