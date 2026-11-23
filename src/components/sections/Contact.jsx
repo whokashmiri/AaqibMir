@@ -1,81 +1,104 @@
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import { useThemeColor } from "../../context/ThemeContext";
- import { useState } from "react";
-export default function Contact() {
-  const { themeColor } = useThemeColor();
-const [emailHovered, setEmailHovered] = useState(false);
-  
+import { useEffect, useState } from "react";
+import { ArrowUpRight, Check, Copy } from "lucide-react";
+import { profile } from "../../constants";
+import { grounds, useTheme } from "../../context/ThemeContext";
 
+const copyLabels = {
+  idle: "Copy address",
+  copied: "Copied",
+  failed: "Couldn't copy. Select the address above.",
+};
+
+export default function Contact() {
+  const { ground, chooseGround } = useTheme();
+  const [copyState, setCopyState] = useState("idle");
+
+  useEffect(() => {
+    if (copyState === "idle") return;
+    const id = setTimeout(() => setCopyState("idle"), 3000);
+    return () => clearTimeout(id);
+  }, [copyState]);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopyState("copied");
+    } catch {
+      setCopyState("failed");
+    }
+  };
+
+  const CopyIcon = copyState === "copied" ? Check : Copy;
 
   return (
-    <section className="relative min-h-screen bg-[#ebe4e1] overflow-hidden">
+    <section
+      id="contact"
+      aria-labelledby="contact-title"
+      className="bg-ground text-ink transition-colors duration-300"
+    >
+      <div className="shell pt-20 lg:pt-32">
+        <h2 id="contact-title" className="display reveal text-[clamp(3rem,12.5vw,12rem)]">
+          Get in touch
+        </h2>
 
-      
+        <div className="mt-12 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-8">
+            <a
+              href={`mailto:${profile.email}`}
+              className="inline-block min-h-11 text-[clamp(1.375rem,3.6vw,3.25rem)] font-medium leading-tight tracking-tight underline decoration-2 underline-offset-[0.2em] [overflow-wrap:anywhere] hover:decoration-4"
+            >
+              {profile.email}
+            </a>
+            <div className="mt-6">
+              <button type="button" onClick={copy} className="button button-line">
+                <CopyIcon size={18} aria-hidden="true" />
+                <span aria-live="polite">{copyLabels[copyState]}</span>
+              </button>
+            </div>
+          </div>
 
-
-
-      {/* CENTER CONTENT */}
-      <div className="flex min-h-screen flex-col items-center justify-center px-10">
-
-        <p className="mb-8 text-[20px] uppercase tracking-[8px] text-gray-500">
-          LET'S WORK TOGETHER.
-        </p>
-
-       <motion.a
-  href="mailto:aaqib@example.com"
-  onHoverStart={() => setEmailHovered(true)}
-  onHoverEnd={() => setEmailHovered(false)}
-  className="group flex items-center gap-6"
->
-  <motion.h1
-    animate={{
-      color: emailHovered ? themeColor : "#000",
-    }}
-    transition={{ duration: 0.6 }}
-    className="text-center text-[7vw] font-black uppercase leading-none tracking-[-6px]"
-  >
-    CONTACT@AAQIBMIR.COM
-  </motion.h1>
-
-  <motion.div
-    animate={{
-      color: emailHovered ? themeColor : "#9ca3af",
-      x: emailHovered ? 8 : 0,
-      y: emailHovered ? -8 : 0,
-    }}
-    transition={{ duration: 0.6 }}
-  >
-    <ArrowUpRight size={70} />
-  </motion.div>
-</motion.a>
-
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-gray-500 uppercase text-[18px]">
-          <span>RIYADH, SAUDI ARABIA</span>
-          <span>•</span>
-          <span>AVAILABLE</span>
+          <ul className="lg:col-span-4">
+            {profile.links.map(({ label, value, href }) => (
+              <li key={label} className="border-t-2 border-ink last:border-b-2">
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex min-h-14 items-center justify-between gap-4 py-3 transition-colors duration-150 hover:bg-ink hover:text-paper lg:px-3"
+                >
+                  <span>
+                    <span className="font-semibold">{label}</span> {value}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </span>
+                  <ArrowUpRight size={20} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
-      <div className="mt-4 flex gap-10 uppercase text-[18px]">
-  {["GITHUB", "INSTAGRAM", "LINKEDIN"].map((item) => (
-    <motion.a
-      key={item}
-      href="#"
-      whileHover={{
-        color: themeColor,
-       
-      }}
-      transition={{
-        duration: 0.2,
-      }}
-      className="cursor-pointer"
-    >
-      {item}
-    </motion.a>
-  ))}
-</div>
+        <footer className="mt-20 flex flex-col gap-6 border-t-2 border-ink py-6 sm:flex-row sm:items-center sm:justify-between lg:mt-32">
+          <p className="[text-wrap:balance]">
+            © {new Date().getFullYear()} Aaqib Bashir Mir, {profile.location}
+          </p>
+          <div role="group" aria-label="Page colour" className="flex gap-2">
+            {grounds.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => chooseGround(option)}
+                aria-pressed={option.id === ground.id}
+                aria-label={option.label}
+                title={option.label}
+                className="grid h-11 w-11 cursor-pointer place-items-center border-2 border-ink"
+                style={{ backgroundColor: option.hex }}
+              >
+                {option.id === ground.id && <Check size={20} aria-hidden="true" />}
+              </button>
+            ))}
+          </div>
+        </footer>
       </div>
-
     </section>
   );
 }

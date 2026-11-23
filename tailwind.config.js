@@ -1,49 +1,28 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: [
-    "./index.html",
-    "./src/**/*.{js,jsx}"
-  ],
+  content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        paper: "rgb(var(--paper) / <alpha-value>)",
+        "paper-soft": "rgb(var(--paper-soft) / <alpha-value>)",
+        globe: "rgb(var(--globe) / <alpha-value>)",
+        ground: "var(--ground)",
 
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
+        // Names the shadcn map component expects.
+        border: "rgb(var(--ink) / <alpha-value>)",
+        background: "rgb(var(--paper) / <alpha-value>)",
+        foreground: "rgb(var(--ink) / <alpha-value>)",
+        "muted-foreground": "rgb(var(--paper-soft) / <alpha-value>)",
       },
-
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+      fontFamily: {
+        display: ['"Archivo Variable"', "Arial", "sans-serif"],
+        sans: ['"Space Grotesk Variable"', "Arial", "sans-serif"],
+      },
+      transitionTimingFunction: {
+        arrive: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },

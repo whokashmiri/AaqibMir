@@ -1,6 +1,8 @@
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource-variable/archivo/wdth-italic.css";
+import "@fontsource-variable/space-grotesk/wght.css";
 import App from "./App";
 import "./index.css";
 import { ThemeProvider } from "./context/ThemeContext";

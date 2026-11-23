@@ -1,374 +1,232 @@
-import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useThemeColor } from "../../context/ThemeContext";
+import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
+import { ArrowDown, Pause, Play, RotateCcw } from "lucide-react";
+import RouteDiagram from "../route/RouteDiagram";
+import { profile, route } from "../../constants";
+import { useTheme } from "../../context/ThemeContext";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 
-const roles = [
-  "FULL STACK",
-  "AI ENGINEER",
-  "SALESFORCE",
-];
+const RouteGlobe = lazy(() => import("../route/RouteGlobe"));
 
-const availability = [
-  "FREELANCE",
-  "FULL TIME",
-];
+const HOLD_MS = 500;
+const END = route.length; // one past the last stop: the whole route in view
 
+// WebGL or a chunk can fail; the flat diagram is already on screen if so.
+class GlobeBoundary extends Component {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
+const formatCoords = ({ lat, lng }) => `${lat.toFixed(2)}° N, ${lng.toFixed(2)}° E`;
 
 export default function Hero() {
+  const { ground } = useTheme();
+  const reduced = useReducedMotion();
+  const globeRef = useRef(null);
 
-  const { themeColor } = useThemeColor();
-  const cursorRef = useRef(null);
+  const [mountGlobe, setMountGlobe] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [stop, setStop] = useState(-1);
+  const [arrivedAt, setArrivedAt] = useState(null);
+  const [playing, setPlaying] = useState(!reduced);
+  const [visible, setVisible] = useState(true);
 
-  const [hovered, setHovered] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [availabilityIndex, setAvailabilityIndex] =
-    useState(0);
-
+  // The map library is heavy: fetch it only once the page is already readable.
   useEffect(() => {
-    const moveCursor = (e) => {
-      if (!cursorRef.current) return;
-
-      cursorRef.current.style.left = `${e.clientX}px`;
-      cursorRef.current.style.top = `${e.clientY}px`;
-    };
-
-    window.addEventListener("mousemove", moveCursor);
-
-    return () => {
-      window.removeEventListener(
-        "mousemove",
-        moveCursor
-      );
-    };
+    if (navigator.connection?.saveData) return;
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(() => setMountGlobe(true), { timeout: 2000 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(() => setMountGlobe(true), 600);
+    return () => clearTimeout(id);
   }, []);
 
-  // TEXT CHANGE
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRoleIndex(
-        (prev) => (prev + 1) % roles.length
-      );
-
-      setAvailabilityIndex(
-        (prev) =>
-          (prev + 1) % availability.length
-      );
-    }, 2500);
-
-    return () => clearInterval(interval);
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    observer.observe(globeRef.current);
+    return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (reduced) setPlaying(false);
+  }, [reduced]);
+
+  const onReady = useCallback(() => setReady(true), []);
+  const onArrive = useCallback((index) => setArrivedAt(index), []);
+
+  // Move on to the next stop, but only while the globe is on screen.
+  useEffect(() => {
+    if (!playing || !ready || !visible) return;
+    if (stop >= 0 && arrivedAt !== stop) return;
+    if (stop >= END) {
+      setPlaying(false);
+      return;
+    }
+    const id = setTimeout(() => setStop(stop + 1), stop < 0 ? 0 : HOLD_MS);
+    return () => clearTimeout(id);
+  }, [playing, ready, visible, stop, arrivedAt]);
+
+  const goTo = (index) => {
+    setPlaying(false);
+    if (index === stop) return;
+    setArrivedAt(null);
+    setStop(index);
+  };
+
+  const finished = stop >= END;
+  const togglePlay = () => {
+    if (finished && !playing) {
+      setArrivedAt(null);
+      setStop(0);
+    }
+    setPlaying(!playing);
+  };
+
+  const PlayIcon = playing ? Pause : finished ? RotateCcw : Play;
+  const playLabel = playing ? "Pause" : finished ? "Replay" : "Play";
 
   return (
-    <>
-      <section className="relative h-screen w-full overflow-hidden bg-[#ebe4e1] text-black">
-        
-        {/* GRID */}
-        <div className="absolute inset-0 z-10 grid grid-cols-6 grid-rows-4">
-          {[...Array(24)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{
-                opacity: 0,
-                borderColor: "transparent",
-              }}
-              animate={{
-                opacity: 1,
-                borderColor: `${themeColor}40`,
-              }}
-              transition={{
-                delay: i * 0.03,
-                duration: 0.8,
-              }}
-              className="border"
-            />
-          ))}
-        </div>
+    <section
+      aria-label="Introduction"
+      className="bg-ground text-ink transition-colors duration-300"
+    >
+      <div className="shell flex flex-col lg:min-h-[calc(100dvh-var(--header-h)-2px)]">
+        <div className="grid flex-1 items-center gap-10 py-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-8 lg:py-6">
+          <div>
+            <p className="max-w-[34ch] text-lg font-medium leading-snug lg:text-xl">
+              {profile.roles.join(", ")}. Based in Riyadh.
+            </p>
 
-        {/* ABSTRACT BG */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute left-[10%] top-[-10%] h-[1200px] w-[300px] rotate-[20deg] bg-pink-200 blur-3xl" />
+            <h1
+              aria-label="Aaqib Bashir Mir"
+              className="display mt-6 text-[clamp(3.5rem,17.5vw,9rem)] lg:mt-8 lg:text-[clamp(5rem,min(10.6vw,20dvh),10.25rem)]"
+            >
+              {/* The slanted Q and B come from the original wordmark. */}
+              <Line i={0}>
+                Aa<i>q</i>ib
+              </Line>
+              <Line i={1}>
+                <i>B</i>ashir
+              </Line>
+              <Line i={2}>Mir</Line>
+            </h1>
 
-          <div className="absolute right-[15%] top-[-10%] h-[1200px] w-[300px] rotate-[20deg] bg-pink-100 blur-3xl" />
-        </div>
-
-        {/* TOP LEFT */}
-        <div className="absolute left-14 top-14 z-20">
-          <div className="text-[18px] font-medium uppercase leading-[1.1] fixed">
-
-            {/* ROLE */}
-            <div className="flex items-center gap-2 ">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={roleIndex}
-                  initial={{
-                    opacity: 0,
-                    y: 10,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: -10,
-                  }}
-                  transition={{
-                    duration: 0.8,
-                  }}
-                >
-                  {roles[roleIndex]}
-                </motion.span>
-              </AnimatePresence>
-
-              <span>DEVELOPER</span>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#work" className="button button-solid">
+                See my work
+                <ArrowDown size={20} aria-hidden="true" />
+              </a>
+              <a href="#contact" className="button button-line">
+                Get in touch
+              </a>
             </div>
+            <p className="mt-4">{profile.availability}</p>
+          </div>
 
-            {/* AVAILABILITY */}
-            <div className="flex items-center gap-2">
-              <span>AVAILABLE FOR</span>
-
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={availabilityIndex}
-                  initial={{
-                    opacity: 0,
-                    y: 10,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: -10,
-                  }}
-                  transition={{
-                    duration: 0.9,
-                  }}
+          <div className="mx-auto w-full max-w-[26rem] lg:max-w-[min(100%,64dvh)]">
+            <div
+              ref={globeRef}
+              className="relative aspect-square overflow-hidden rounded-full bg-globe"
+              role="img"
+              aria-label={`Map of the route from ${route[0].name} to ${route[END - 1].name}`}
+            >
+              <div
+                className={`absolute inset-0 transition-opacity duration-500 ${ready ? "opacity-0" : ""}`}
+              >
+                <RouteDiagram stop={stop} />
+              </div>
+              {mountGlobe && (
+                <GlobeBoundary>
+                  <Suspense fallback={null}>
+                    <div
+                      className={`absolute inset-0 transition-opacity duration-500 ${ready ? "" : "opacity-0"}`}
+                    >
+                      <RouteGlobe
+                        stop={stop}
+                        color={ground.hex}
+                        reduced={reduced}
+                        onReady={onReady}
+                        onArrive={onArrive}
+                      />
+                    </div>
+                  </Suspense>
+                </GlobeBoundary>
+              )}
+            </div>
+            <div className="mt-4 flex min-h-11 items-center justify-between gap-4">
+              {ready && (
+                <p className="text-sm">
+                  Map data{" "}
+                  <a
+                    className="underline underline-offset-2"
+                    href="https://www.openstreetmap.org/copyright"
+                  >
+                    © OpenStreetMap
+                  </a>
+                  ,{" "}
+                  <a
+                    className="underline underline-offset-2"
+                    href="https://carto.com/about-carto/"
+                  >
+                    © CARTO
+                  </a>
+                </p>
+              )}
+              {ready && (
+                <button
+                  type="button"
+                  onClick={togglePlay}
+                  className="inline-flex min-h-11 cursor-pointer items-center gap-2 px-2 font-semibold"
                 >
-                  {
-                    availability[
-                      availabilityIndex
-                    ]
-                  }
-                </motion.span>
-              </AnimatePresence>
+                  <PlayIcon size={18} aria-hidden="true" />
+                  {playLabel}
+                  <span className="sr-only"> the route</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* MENU */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="fixed right-14 top-14 z-30 text-[22px] font-black uppercase transition-all hover:scale-110 "
+        <ol
+          aria-label="Stops on the route"
+          className="-mx-4 grid grid-cols-2 border-t-2 border-ink sm:mx-0 sm:grid-cols-4 lg:grid-cols-8"
         >
-          MENU
-        </button>
-
-        {/* LOGO */}
-        <div className="fixed left-1/2 top-12 z-20 -translate-x-1/2 text-center ">
-          <motion.h3
-            animate={{
-              color: themeColor,
-            }}
-            transition={{
-              duration: 1,
-            }}
-            className="text-[22px] font-black uppercase tracking-tight"
-          >
-            AAQIB
-          </motion.h3>
-
-          <motion.p
-            animate={{
-              color: themeColor,
-            }}
-            transition={{
-              duration: 1,
-            }}
-            className="-mt-2 text-[22px] font-black  uppercase"
-          >
-            Bashir
-          </motion.p>
-        </div>
-
-        {/* MAIN NAME */}
-        <div
-          className="relative z-20 flex h-full items-center justify-center"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        >
-          <motion.div
-            initial={{
-              scale: 0.9,
-              opacity: 0,
-            }}
-            animate={{
-              scale: 1,
-              opacity: 1,
-            }}
-            transition={{
-              duration: 1,
-            }}
-            className="relative text-center leading-none"
-          >
-            {/* AAQIB */}
-            <h1 className="text-[10vw] font-black uppercase tracking-[-10px]">
-              AA
-
-              <motion.span
-                animate={{
-                  color: themeColor,
-                }}
-                transition={{
-                  duration: 0.8,
-                }}
-                className="italic z-10 relative"
+          {route.map((city, i) => (
+            <li key={city.name}>
+              <button
+                type="button"
+                onClick={() => goTo(i)}
+                aria-current={i === stop ? "step" : undefined}
+                className="relative flex min-h-16 w-full cursor-pointer flex-col justify-center px-4 py-3 text-left transition-colors duration-150 hover:bg-ink/10 aria-[current=step]:bg-ink aria-[current=step]:text-paper sm:px-3"
               >
-                Q
-              </motion.span>
-
-              IB
-            </h1>
-
-            {/* BASHIR */}
-            <h1 className="-mt-8 text-[10vw] font-black uppercase tracking-[-10px]">
-              <motion.span
-                animate={{
-                  color: themeColor,
-                }}
-                transition={{
-                  duration: 0.8,
-                }}
-                className="italic"
-              >
-                B
-              </motion.span>
-
-              ASHIR
-            </h1>
-          </motion.div>
-        </div>
-
-        {/* BOTTOM */}
-        <div className="fixed bottom-12 left-14 z-20 text-[18px] uppercase">
-          PORTFOLIO {new Date().getFullYear()}
-        </div>
-
-        <div className="fixed bottom-12 right-14 z-20 text-[18px] uppercase">
-          BASED IN RIYADH
-        </div>
-
-        {/* VIDEO CURSOR */}
-        <motion.div
-          ref={cursorRef}
-          animate={{
-            scale: hovered ? 1 : 0,
-            opacity: hovered ? 1 : 0,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 200,
-            damping: 20,
-          }}
-          className="pointer-events-none fixed left-0 top-0 z-50 h-44 w-44 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border border-white/20 shadow-2xl"
-        >
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="h-full w-full object-cover"
-            src="https://www.pexels.com/download/video/36832454/"
-          />
-        </motion.div>
-      </section>
-
-      {/* MENU OVERLAY */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{
-              opacity: 0,
-              backdropFilter: "blur(0px)",
-            }}
-            animate={{
-              opacity: 1,
-              backdropFilter: "blur(10px)",
-            }}
-            exit={{
-              opacity: 0,
-              backdropFilter: "blur(0px)",
-            }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#ebe4e1]/90"
-          >
-            
-            {/* GRID */}
-            <div className="absolute inset-0 grid grid-cols-6 grid-rows-4">
-              {[...Array(24)].map((_, i) => (
-                <div
-                  key={i}
-                  className="border"
-                  style={{
-                    borderColor: `${themeColor}30`,
-                  }}
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-1 origin-left bg-ink transition-transform duration-500 ease-arrive motion-reduce:transition-none ${
+                    i <= stop ? "scale-x-100" : "scale-x-0"
+                  }`}
                 />
-              ))}
-            </div>
+                <span className="font-semibold">{city.name}</span>
+                <span className="text-sm tabular-nums">{formatCoords(city)}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
 
-            {/* CLOSE */}
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="absolute right-14 top-10 text-[60px] font-light"
-            >
-              ×
-            </button>
-
-            {/* MENU ITEMS */}
-            <div className="relative z-20 flex flex-col items-center text-center leading-none">
-              {[
-                "HOME",
-                "ABOUT",
-                "PROJECTS",
-                "LAB",
-              ].map((item, index) => (
-                <motion.div
-                  key={item}
-                  initial={{
-                    opacity: 0,
-                    y: 50,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    delay: index * 0.1,
-                  }}
-                  className="group flex items-center gap-10"
-                >
-                  {/* LEFT ARROW */}
-                  <span className="translate-y-2 text-[5vw] font-black opacity-0 transition-all duration-300 group-hover:opacity-100">
-                    &gt;
-                  </span>
-
-                  {/* TEXT */}
-                  <h1 className="cursor-pointer text-[9vw] font-black uppercase tracking-[-8px] transition-all duration-300 hover:scale-105">
-                    {item}
-                  </h1>
-
-                  {/* RIGHT ARROW */}
-                  <span className="translate-y-2 text-[5vw] font-black opacity-0 transition-all duration-300 group-hover:opacity-100">
-                    &lt;
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+function Line({ i, children }) {
+  return (
+    <span aria-hidden="true" className="block overflow-hidden pr-[0.1em]">
+      <span className="rise block" style={{ "--i": i }}>
+        {children}
+      </span>
+    </span>
   );
 }

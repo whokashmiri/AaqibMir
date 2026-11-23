@@ -1,23 +1,25 @@
+import Header from "./components/sections/Header";
 import Hero from "./components/sections/Hero";
-import CreativeHero from "./components/sections/CreativeHero";
+import Work from "./components/sections/Work";
+import About from "./components/sections/About";
 import Contact from "./components/sections/Contact";
-import AboutSection from "./components/sections/AboutSection";
-import SeeMyWorkSection from "./components/sections/SeeMyWorkSection";
-import ContactSection from "./components/sections/ContactSection";
-import ProjectsHero from "./components/sections/ProjectsHero";
-import Projects from "./components/sections/Projects";
 
 export default function Home() {
   return (
     <>
-      <Hero />
-      <CreativeHero />
-      <SeeMyWorkSection />
-      <Contact />
-      <AboutSection />
-      <ContactSection />
-      <ProjectsHero />
-      <Projects />
+      <a
+        href="#main"
+        className="fixed left-4 top-2 z-50 -translate-y-24 bg-ink px-4 py-3 text-paper focus:translate-y-0"
+      >
+        Skip to content
+      </a>
+      <Header />
+      <main id="main" tabIndex={-1} className="outline-none">
+        <Hero />
+        <Work />
+        <About />
+        <Contact />
+      </main>
     </>
   );
 }
